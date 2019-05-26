@@ -25,75 +25,96 @@ map[3,3]='*'
 
 #Exit position
 map[2,4]='*'
+
+
+#Move sequences
+moves = 'RRRFFFFRFF'
+
 def rotate():
     global direction
     if direction == 'N':
         direction = 'E'
+        return 'East'
     elif direction == 'E':
         direction =  'S'
+        return 'South'
     elif direction == 'S':
         direction =  'W'
+        return 'West'
     elif direction == 'W':
         direction =  'N'
+        return 'North'
     
 def move():
-    result = np.where(map == 'T')
-    listOfCoordinates= list(zip(result[0], result[1]))
-    x = listOfCoordinates[0][0]
-    y = listOfCoordinates[0][1]
-    map[listOfCoordinates[0]] = 0
+    try:
+        mine_hit = False
+        exit_reached = False
         
-    if direction == 'E':
-        if map[x,y+1] == '*':
-            print('BOOM!')
-            return 1
-        elif map[x,y+1] == 'e':
-            print('Exit Reached')
-            return 2
-        else:
-            map[x,y+1]='T'
-    if direction == 'N':
-        if map[x-1,y]== '*':
-            print('BOOM!')
-            return 1
-        elif map[x-1,y] == 'e':
-            print('Exit Reached')
-            return 2        
-        else:
-            map[x-1,y]='T'
-    if direction == 'S':
-        if map[x+1,y]=='*':
-            print('BOOM!')
-            return 1
-        elif map[x+1,y] == 'e':
-            print('Exit Reached')
-            return 2        
-        else:
-            map[x+1,y]='T'
-    if direction == 'W':
-        if map[x,y-1]=='*':
-            print('BOOM!')
-            return 1
-        elif map[x,y-1] == 'e':
-            print('Exit Reached')
-            return 2        
-        else:
-            map[x,y-1]='T'
+        result = np.where(map == 'T')
+        listOfCoordinates= list(zip(result[0], result[1]))
+        x = listOfCoordinates[0][0]
+        y = listOfCoordinates[0][1]
+        map[listOfCoordinates[0]] = 0
+            
+        if direction == 'E':
+            if map[x,y+1] == '*':
+                print('BOOM!')
+                return 1
+            elif map[x,y+1] == 'e':
+                print('Exit Reached')
+                return 2
+            else:
+                map[x,y+1]='T'
+                return True
+        if direction == 'N':
+            if map[x-1,y]== '*':
+                print('BOOM!')
+                return 1
+            elif map[x-1,y] == 'e':
+                print('Exit Reached')
+                return 2        
+            else:
+                map[x-1,y]='T'
+                return True
+        if direction == 'S':
+            if map[x+1,y]=='*':
+                print('BOOM!')
+                return 1
+            elif map[x+1,y] == 'e':
+                print('Exit Reached')
+                return 2        
+            else:
+                map[x+1,y]='T'
+                return True
+        if direction == 'W':
+            if map[x,y-1]=='*':
+                print('BOOM!')
+                return 1
+            elif map[x,y-1] == 'e':
+                print('Exit Reached')
+                return 2        
+            else:
+                map[x,y-1]='T'
+                return True
+    except:
+        print('Something went wrong')
 
 
+def sequence(moves):
+    for i in moves:
+        if i == 'R':
+            print('Rotated '+rotate())
+        elif i == 'F':
+            if move():
+                print( 'Success!')
+            elif move()==1:
+                print('Mine hit!')
+            elif move()==2:
+                print('Exit reached')
+        else:
+            return 'Invalid Move'
+            
 print(map)
 print()
-rotate()
-rotate()
-rotate()
-move()
-move()
-move()
-move()
-rotate()
-move()
-move()
-move()
-
-
+sequence(moves)
 print(map)
